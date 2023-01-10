@@ -125,7 +125,7 @@ class XyceServer:
             command = (self._xyce_command, '-r', output_filename, input_filename)
         else:
             assert self._n_proc
-            command = ('mpirun', '-n', self._n_proc, self._xyce_command, '-r', output_filename, input_filename)
+            command = ('mpirun', '-n', str(self._n_proc), self._xyce_command, '-r', output_filename, input_filename)
         self._logger.info('Run {}'.format(' '.join(command)))
         process = subprocess.Popen(
             command,
