@@ -71,6 +71,9 @@ class XyceServer:
     def __init__(self, **kwargs):
 
         self._xyce_command = kwargs.get('xyce_command') or self.XYCE_COMMAND
+        
+        self._parallel = kwargs.get('parallel', False)
+        self._n_proc = kwargs.get('n_proc', None)
 
     ##############################################
 
@@ -118,7 +121,11 @@ class XyceServer:
         with open(input_filename, 'w') as f:
             f.write(str(spice_input))
 
-        command = (self._xyce_command, '-r', output_filename, input_filename)
+        if not self._parallel:
+            command = (self._xyce_command, '-r', output_filename, input_filename)
+        else:
+            assert self._n_proc
+            command = ('mpirun', '-n', self._n_proc, self._xyce_command, '-r', output_filename, input_filename)
         self._logger.info('Run {}'.format(' '.join(command)))
         process = subprocess.Popen(
             command,

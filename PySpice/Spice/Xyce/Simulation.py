@@ -54,11 +54,10 @@ class XyceCircuitSimulator(CircuitSimulator):
         if is_parallel:
             try:
                 n_proc = kwargs['n_proc']
-                xyce_command = f'mpirun -n {n_proc} {xyce_command}'
             except KeyError:
                 raise ValueError('Missing n_proc argument for parallel simulation')
 
-        self._xyce_server = XyceServer(xyce_command=xyce_command)
+        self._xyce_server = XyceServer(xyce_command=xyce_command, parallel=is_parallel, n_proc=n_proc)
 
     ##############################################
 
